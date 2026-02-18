@@ -8,6 +8,7 @@ import TabBar from './components/TabBar'
 import AddVideoTab from './components/AddVideoTab'
 import WatchListTab from './components/WatchListTab'
 import HistoryTab from './components/HistoryTab'
+import { firebaseInitError } from './firebase'
 
 function MainApp({ currentUser, onLogout }) {
   const [activeTab, setActiveTab] = useState(0)
@@ -44,6 +45,20 @@ function MainApp({ currentUser, onLogout }) {
 }
 
 function App() {
+  if (firebaseInitError) {
+    return (
+      <div className="user-select-screen">
+        <div className="user-select-content">
+          <h1 className="user-select-title">Video</h1>
+          <p className="user-select-subtitle">
+            App setup error. Check GitHub Actions repository secrets and redeploy.
+          </p>
+          <p className="video-meta">{firebaseInitError}</p>
+        </div>
+      </div>
+    )
+  }
+
   const [currentUser, setCurrentUser] = useState(
     () => localStorage.getItem('videoAppUser') || null
   )
