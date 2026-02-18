@@ -1,5 +1,5 @@
-const CACHE_NAME = 'video-app-v1'
-const STATIC_ASSETS = ['/Video-Watch-App/', '/Video-Watch-App/index.html']
+const CACHE_NAME = 'video-app-v2'
+const STATIC_ASSETS = ['./', './index.html']
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
