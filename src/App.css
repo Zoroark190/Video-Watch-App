@@ -15,7 +15,7 @@
 .user-select-title {
   font-size: 48px;
   font-weight: 700;
-  color: var(--red);
+  color: var(--light-blue);
   margin-bottom: 8px;
 }
 
@@ -37,14 +37,14 @@
   padding: 16px 32px;
   font-size: 20px;
   font-weight: 600;
-  background: var(--red);
+  background: var(--light-blue);
   color: white;
   border-radius: 12px;
   transition: background 0.2s;
 }
 
 .user-select-btn:active {
-  background: var(--dark-red);
+  background: #4a93be;
 }
 
 /* ============ Header ============ */
@@ -53,7 +53,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  background: var(--red);
+  background: var(--light-blue);
   color: white;
   position: sticky;
   top: 0;
@@ -107,6 +107,17 @@
   color: var(--text-secondary);
   border-bottom: 2px solid transparent;
   transition: color 0.2s, border-color 0.2s;
+  position: relative;
+}
+
+.tab-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--red);
+  border-radius: 50%;
+  margin-left: 6px;
+  vertical-align: middle;
 }
 
 .tab-btn-active {
@@ -387,6 +398,15 @@
 
 .modal-option-btn:active {
   background: var(--dark-red);
+}
+
+.modal-option-btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text);
+}
+
+.modal-option-btn-secondary:active {
+  background: var(--border);
 }
 
 .modal-cancel-btn {

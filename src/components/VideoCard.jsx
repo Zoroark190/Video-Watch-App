@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
-import { doc, updateDoc, deleteDoc } from 'firebase/firestore'
+import { doc, updateDoc, deleteDoc, deleteField } from 'firebase/firestore'
 import { db } from '../firebase'
 import { STATUS } from '../constants'
 import { parseDuration } from '../utils/parseDuration'
@@ -20,6 +20,7 @@ async function setInteraction(videoDocId, currentUser, status) {
 export default function VideoCard({ video, currentUser, mode, isOwn, showRedDot }) {
   const [showModal, setShowModal] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [showHistoryOptions, setShowHistoryOptions] = useState(false)
 
   async function handleDelete() {
     await deleteDoc(doc(db, 'videos', video.id))
@@ -44,8 +45,21 @@ export default function VideoCard({ video, currentUser, mode, isOwn, showRedDot 
     setInteraction(video.id, currentUser, STATUS.NOT_INTERESTED)
   }
 
-  async function handleWatchlistWatched() {
-    await deleteDoc(doc(db, 'videos', video.id))
+  function handleWatchlistWatched() {
+    setInteraction(video.id, currentUser, STATUS.WATCHED)
+  }
+
+  function handleHistoryDismiss() {
+    setInteraction(video.id, currentUser, STATUS.HISTORY_DISMISSED)
+    setShowHistoryOptions(false)
+  }
+
+  async function handleUndoWatched() {
+    const videoRef = doc(db, 'videos', video.id)
+    await updateDoc(videoRef, {
+      [`interactions.${currentUser}`]: deleteField(),
+    })
+    setShowHistoryOptions(false)
   }
 
   return (
@@ -57,6 +71,15 @@ export default function VideoCard({ video, currentUser, mode, isOwn, showRedDot 
             className="delete-btn"
             onClick={() => setShowDeleteConfirm(true)}
             aria-label="Remove video"
+          >
+            &times;
+          </button>
+        )}
+        {mode === 'history' && (
+          <button
+            className="delete-btn"
+            onClick={() => setShowHistoryOptions(true)}
+            aria-label="Remove from history"
           >
             &times;
           </button>
@@ -108,6 +131,26 @@ export default function VideoCard({ video, currentUser, mode, isOwn, showRedDot 
           onSelect={handleGoingSelect}
           onClose={() => setShowModal(false)}
         />
+      )}
+
+      {showHistoryOptions && createPortal(
+        <div className="modal-overlay" onClick={() => setShowHistoryOptions(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3 className="modal-title">Remove from history</h3>
+            <div className="modal-options">
+              <button className="modal-option-btn" onClick={handleHistoryDismiss}>
+                Delete history
+              </button>
+              <button className="modal-option-btn modal-option-btn-secondary" onClick={handleUndoWatched}>
+                I didn't actually watch
+              </button>
+            </div>
+            <button className="modal-cancel-btn" onClick={() => setShowHistoryOptions(false)}>
+              Cancel
+            </button>
+          </div>
+        </div>,
+        document.body
       )}
 
       {showDeleteConfirm && createPortal(

@@ -1,6 +1,6 @@
-const TABS = ['Select/add videos', 'What to watch']
+const TABS = ['Select/add videos', 'What to watch', 'History']
 
-export default function TabBar({ activeTab, onTabChange }) {
+export default function TabBar({ activeTab, onTabChange, showWatchListDot }) {
   return (
     <nav className="tab-bar">
       {TABS.map((tab, index) => (
@@ -10,6 +10,7 @@ export default function TabBar({ activeTab, onTabChange }) {
           onClick={() => onTabChange(index)}
         >
           {tab}
+          {index === 1 && showWatchListDot && <span className="tab-dot" />}
         </button>
       ))}
     </nav>

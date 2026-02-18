@@ -16,7 +16,7 @@ export default function WatchListTab({ currentUser }) {
     )
   })
 
-  // Exclude ones where I've already marked as "Watched"
+  // Exclude ones where I've already marked as "Watched" (those go to History)
   const visible = watchedByOther.filter((v) => {
     return v.interactions?.[currentUser]?.status !== STATUS.WATCHED
   })

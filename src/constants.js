@@ -9,4 +9,5 @@ export const STATUS = {
   GOING_TODAY: 'going_today',
   GOING_FUTURE: 'going_future',
   NOT_INTERESTED: 'not_interested',
+  HISTORY_DISMISSED: 'history_dismissed',
 }
