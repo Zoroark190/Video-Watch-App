@@ -12,6 +12,12 @@
   width: 100%;
 }
 
+.user-select-heart {
+  width: 120px;
+  height: auto;
+  margin-bottom: 16px;
+}
+
 .user-select-title {
   font-size: 48px;
   font-weight: 700;

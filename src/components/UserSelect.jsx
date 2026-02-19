@@ -4,6 +4,11 @@ export default function UserSelect({ onSelectUser }) {
   return (
     <div className="user-select-screen">
       <div className="user-select-content">
+        <img
+          className="user-select-heart"
+          src={`${import.meta.env.BASE_URL}hand-drawn-heart-4.png`}
+          alt=""
+        />
         <h1 className="user-select-title">Video</h1>
         <p className="user-select-subtitle">Who are you?</p>
         <div className="user-select-buttons">
