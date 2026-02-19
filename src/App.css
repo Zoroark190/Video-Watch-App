@@ -190,9 +190,12 @@
 }
 
 /* ============ Video Card ============ */
+.video-card-wrapper {
+  margin: 8px 0;
+}
+
 .video-card {
   background: var(--bg);
-  margin: 8px 0;
 }
 
 .video-card-own {
@@ -413,4 +416,96 @@
   font-size: 15px;
   color: var(--text-secondary);
   padding: 8px;
+}
+
+/* ============ Video Notes ============ */
+.video-note-section {
+  background: var(--bg);
+  padding: 10px 16px 14px;
+  border-top: 1px solid var(--border);
+}
+
+.note-edit-btn {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--light-blue);
+  padding: 4px 0;
+}
+
+.note-edit-btn:active {
+  opacity: 0.7;
+}
+
+.note-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.note-textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.note-textarea:focus {
+  border-color: var(--light-blue);
+}
+
+.note-editor-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.note-save-btn {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--light-blue);
+  color: white;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.note-save-btn:disabled {
+  opacity: 0.5;
+}
+
+.note-save-btn:active:not(:disabled) {
+  opacity: 0.8;
+}
+
+.note-cancel-btn {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-radius: 6px;
+}
+
+.note-display {
+  padding: 2px 0;
+}
+
+.note-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.note-text {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.4;
+  margin-top: 4px;
+  white-space: pre-wrap;
 }
