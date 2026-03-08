@@ -25,3 +25,15 @@ self.addEventListener('fetch', (event) => {
     fetch(event.request).catch(() => caches.match(event.request))
   )
 })
+
+self.addEventListener('push', (event) => {
+  const data = event.data?.json() ?? {}
+  const title = data.title ?? 'Video App'
+  const body = data.body ?? ''
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body,
+      icon: '/icons/icon-192.png',
+    })
+  )
+})
