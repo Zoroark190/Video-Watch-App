@@ -36,6 +36,8 @@ export function useNotifications(currentUser) {
     let cleanup
     setup().then((unsub) => {
       cleanup = unsub
+    }).catch((err) => {
+      console.error('[Notifications] setup failed:', err)
     })
     return () => cleanup?.()
   }, [currentUser])
