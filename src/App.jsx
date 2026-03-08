@@ -9,8 +9,10 @@ import AddVideoTab from './components/AddVideoTab'
 import WatchListTab from './components/WatchListTab'
 import HistoryTab from './components/HistoryTab'
 import { firebaseInitError } from './firebase'
+import { useNotifications } from './hooks/useNotifications'
 
 function MainApp({ currentUser, onLogout }) {
+  useNotifications(currentUser)
   const [activeTab, setActiveTab] = useState(0)
   const { videos } = useVideos()
   const otherUser = getOtherUser(currentUser)
