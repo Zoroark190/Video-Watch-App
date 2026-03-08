@@ -8,21 +8,28 @@ export function useNotifications(currentUser) {
     if (!currentUser || !('Notification' in window) || !('serviceWorker' in navigator)) return
 
     async function setup() {
+      console.log('[Notifications] requesting permission...')
       const permission = await Notification.requestPermission()
+      console.log('[Notifications] permission:', permission)
       if (permission !== 'granted') return
 
+      console.log('[Notifications] waiting for SW...')
       const swReg = await navigator.serviceWorker.ready
+      console.log('[Notifications] SW ready:', swReg.scope)
       const messaging = getMessaging()
+      console.log('[Notifications] getting token, vapidKey:', import.meta.env.VITE_FIREBASE_VAPID_KEY ? 'set' : 'MISSING')
       const token = await getToken(messaging, {
         vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
         serviceWorkerRegistration: swReg,
       })
+      console.log('[Notifications] token:', token ? 'received' : 'null/empty')
 
       if (token) {
         await setDoc(doc(db, 'fcmTokens', currentUser), {
           token,
           updatedAt: serverTimestamp(),
         })
+        console.log('[Notifications] token saved for', currentUser)
       }
 
       return onMessage(messaging, (payload) => {
