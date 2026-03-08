@@ -1,11 +1,17 @@
 import { useEffect } from 'react'
-import { getMessaging, getToken, onMessage } from 'firebase/messaging'
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../firebase'
 
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
+  const rawData = atob(base64)
+  return Uint8Array.from([...rawData].map((c) => c.charCodeAt(0)))
+}
+
 export function useNotifications(currentUser) {
   useEffect(() => {
-    if (!currentUser || !('Notification' in window) || !('serviceWorker' in navigator)) return
+    if (!currentUser || !('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) return
 
     async function setup() {
       console.log('[Notifications] requesting permission...')
@@ -16,36 +22,23 @@ export function useNotifications(currentUser) {
       console.log('[Notifications] waiting for SW...')
       const swReg = await navigator.serviceWorker.ready
       console.log('[Notifications] SW ready:', swReg.scope)
-      const messaging = getMessaging()
-      console.log('[Notifications] getting token, vapidKey:', import.meta.env.VITE_FIREBASE_VAPID_KEY ? 'set' : 'MISSING')
-      const token = await getToken(messaging, {
-        vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
-        serviceWorkerRegistration: swReg,
-      })
-      console.log('[Notifications] token:', token ? 'received' : 'null/empty')
 
-      if (token) {
-        await setDoc(doc(db, 'fcmTokens', currentUser), {
-          token,
-          updatedAt: serverTimestamp(),
-        })
-        console.log('[Notifications] token saved for', currentUser)
-      }
-
-      return onMessage(messaging, (payload) => {
-        const { title, body } = payload.data ?? {}
-        if (title) {
-          new Notification(title, { body: body ?? '', icon: '/icons/icon-192.png' })
-        }
+      console.log('[Notifications] subscribing to push...')
+      const subscription = await swReg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(import.meta.env.VITE_FIREBASE_VAPID_KEY),
       })
+      console.log('[Notifications] push subscription obtained')
+
+      await setDoc(doc(db, 'fcmTokens', currentUser), {
+        subscription: JSON.parse(JSON.stringify(subscription)),
+        updatedAt: serverTimestamp(),
+      })
+      console.log('[Notifications] subscription saved for', currentUser)
     }
 
-    let cleanup
-    setup().then((unsub) => {
-      cleanup = unsub
-    }).catch((err) => {
+    setup().catch((err) => {
       console.error('[Notifications] setup failed:', err)
     })
-    return () => cleanup?.()
   }, [currentUser])
 }
